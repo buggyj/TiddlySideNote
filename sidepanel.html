@@ -1,0 +1,21 @@
+<html>
+  <head>
+    <title>Tiddly Side Note</title>
+    <style>
+    textarea {
+  box-sizing: border-box;
+  width:100%;
+
+}
+</style>
+  </head>
+  <body>
+    home wiki- <p id="home">not connected</p>
+   <div> <button id="get" style="background:red;width:25%;">edit</button> <button id="put" style="background:lightgreen;width:25%;">save</button> <button id="cancel" style="background:orange;width:25%;">cancel</button></div>
+	<textarea  data-autoresize id="edit" name="edit" rows="2" style="display:none;" >
+</textarea>
+
+	 <div id="content">no conntent</div>
+    <script src="sidepanel.js"></script>
+  </body>
+</html>
