@@ -14,7 +14,9 @@
       ],
 		"run_at" : "document_start"
 	} ],
-  
+  "action": {
+    "default_title": "Click to open panel"
+  },
   
   "background": {
     "service_worker": "service-worker.js"

@@ -44,7 +44,7 @@
 				msg.version = message.getAttribute("data-version");
 				msg.url = window.location.href;
 				if (msg.action.substring(0,5) !== "__TSN") {console.log (msg.action);return  false;}
-				console.log ("got show" + msg.action );
+				//console.log ("got show" + msg.action );
 				//event.currentTarget.parentNode.removeChild(message);
 				// Save the file
 				message.parentNode.removeChild(message);
@@ -56,10 +56,12 @@
 
 
 
-	function getDetails (name, opts){
+	function getDetails (data, opts){
 						// Find the message box element
-		var data= {section:'__sys__',callback:"__TSN__",name:name,category:'TSN'};
-		if (opts) data.opts = opts;
+		data.section='__sys__';
+		data.callback="__TSN__"
+		data.category='TSN';
+		if (opts) data.opts = opts;//console.log("---------------",data.url);
 		var messageBox = document.getElementById("tiddlyclip-message-box");
 		if(messageBox) {
 			// Create the message element and put it in the message box
@@ -68,20 +70,21 @@
 			message.setAttribute("data-tiddlyclip-pageData",JSON.stringify({data:data}));
 			message.setAttribute("data-tiddlyclip-currentsection",0);
 			messageBox.appendChild(message);
-			console.log("start get ");
+			//console.log("start get ");
 			// Create and dispatch the custom event to the extension
 			var event = document.createEvent("Events");
 			event.initEvent("tiddlyclip-save-file",true,false);
 			message.dispatchEvent(event);
-			console.log("paste event sent");
+			//console.log("paste event sent");
 		}
 	}
 	
-		function putDetails (name, opts,payload){
+		function putDetails (data, opts){
 						// Find the message box element
-		var data= {section:'__sys__',callback:"__TSNput__",name:name,category:'TSNput'};
-		data.opts = opts;
-		data.payload = payload
+		data.section='__sys__';
+		data.callback="__TSNput__"
+		data.category='TSNput';
+		data.opts = opts;//console.log("---------------",data.url)
 		var messageBox = document.getElementById("tiddlyclip-message-box");
 		if(messageBox) {
 			// Create the message element and put it in the message box
@@ -90,23 +93,23 @@
 			message.setAttribute("data-tiddlyclip-pageData",JSON.stringify({data:data}));
 			message.setAttribute("data-tiddlyclip-currentsection",0);
 			messageBox.appendChild(message);
-			console.log("start put ");
+			//console.log("start put ");
 			// Create and dispatch the custom event to the extension
 			var event = document.createEvent("Events");
 			event.initEvent("tiddlyclip-save-file",true,false);
 			message.dispatchEvent(event);
-			console.log("paste event sent");
+			//console.log("paste event sent");
 		}
 	}
 
 
 	   chrome.runtime.onMessage.addListener(
-			  function(request, sender, sendResponse) {
+			  function(request, sender, sendResponse) {console.log("action",request.action)
 				//here we need to check that the tiddlywiki is open for cuts - in the new interactive way.
 				if (request.action == 'getTid') {
 					injectMessageBox(document);
 					// first stage send back url
-					console.log("get tid sidpanel");
+					//console.log("get tid sidpanel");
 
 					callbacks["__TSN__"]= function (x){
 						var resp = {};
@@ -115,20 +118,20 @@
 						sendResponse(resp);
 						callbacks["__TSN__"] = null;
 					}
-					getDetails(request.url, request.opts);
+					getDetails(request.data, request.opts);
 					return true;
 				} 
 				if (request.action == 'putTid') {
 					injectMessageBox(document);
 					// first stage send back url
-					console.log("put tid sidpanel");
+					//console.log("put tid sidpanel");
 
 					callbacks["__TSNput__"]= function (x){
-						console.log("puttid callback  ");
+						//console.log("puttid callback  ");
 						sendResponse("saved");
 						callbacks["__TSNput__"] = null;
 					}
-					putDetails(request.url, request.opts, request.payload);
+					putDetails(request.data, request.opts);
 					return true;
 				}
 		});

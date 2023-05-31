@@ -16,13 +16,14 @@ function addAutoResize() {
 }
  addAutoResize();
 
-
+var current= {};
+current.url  = null;
 //-------------GET----------------
 var getTid = function() {
 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 	  var currUrl = tabs[0].url;
 		chrome.storage.local.get({homeTab:""}, function(items){  
-			chrome.tabs.sendMessage(items.homeTab, {action : 'getTid', url:currUrl, opts:"edit"},function(res){
+			chrome.tabs.sendMessage(items.homeTab, {action : 'getTid', data:{url:currUrl}, opts:"edit"},function(res){
 				let y = document.querySelector('#content');
 				let x = document.querySelector('#edit');
 				y.style.display = "none";
@@ -35,6 +36,7 @@ var getTid = function() {
 		});
 	});
 }
+
 
 
 document.querySelector('#get').addEventListener('click', getTid);	
@@ -52,12 +54,13 @@ document.querySelector('#put').addEventListener('click', function() {
 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 	  var currUrl = tabs[0].url;
 		chrome.storage.local.get({homeTab:""}, function(items){  
-			chrome.tabs.sendMessage(items.homeTab, {action : 'putTid', url:currUrl, opts:"put", payload:x.value},function(res){
-				console.log(res);
-				chrome.tabs.sendMessage(items.homeTab, {action : 'getTid', url:currUrl,opts:"render"},function(res){
+			chrome.tabs.sendMessage(items.homeTab, {action : 'putTid', data:{url:currUrl, text:x.value, title:tabs[0].title, favIconUrl:tabs[0].favIconUrl}, opts:"put"},function(res){
+				//console.log(res);
+				chrome.tabs.sendMessage(items.homeTab, {action : 'getTid', data:{url:currUrl},opts:"render"},function(res){
 					y.innerHTML=res.msg;
 					y.style.display = "block";
-					console.log("reloaded new");
+					x.value = "";
+					//console.log("reloaded new");
 				});
 				
 				
@@ -72,7 +75,7 @@ document.querySelector('#put').addEventListener('click', function() {
 document.querySelector('#cancel').addEventListener('click', function() {
 	let x = document.querySelector('#edit');
 	let y = document.querySelector('#content');
-	console.log("emptybox ");
+	//console.log("emptybox ");
 	x.value="";
 	x.style.display = "none";
 	y.style.display = "block";
@@ -80,14 +83,31 @@ document.querySelector('#cancel').addEventListener('click', function() {
 //-----------------------------
 
 function getNote(tabs) {
-  var currUrl = tabs[0].url;
-	chrome.storage.local.get({homeTab:""}, function(items){  
-		chrome.tabs.sendMessage(items.homeTab, {action : 'getTid', url:currUrl,opts:"render"},function(res){
+  let x = document.querySelector('#edit');
+  let y = document.querySelector('#content');
+  let z = document.querySelector('#icon');
+  let editvalue = x.value;
+  x.value = "";//this stops multiple calls to save 
+  x.style.display = "none";
+  //first save note
+  chrome.storage.local.get({homeTab:""}, function(items){  
+	  current.text = editvalue;
+		if (current.url && editvalue) chrome.tabs.sendMessage(items.homeTab, {action : 'putTid', opts:"puts",data:current},function(res){
+			//console.log(res);
+		});
+		current.url = tabs[0].url;
+		current.favIconUrl=tabs[0].favIconUrl;
+		current.title=tabs[0].title;
+		current.text = "";
+		z.src=tabs[0].favIconUrl;
+		chrome.tabs.sendMessage(items.homeTab, {action : 'getTid',data:{url:current.url} ,opts:"render"},function(res){
 			//console.log("res.msg ",res.msg);
-			(document.querySelector('#content')).innerHTML=res.msg;
+			y.innerHTML=res.msg;
+			y.style.display = "block";
+			
 		});
   });
-  console.log(tabs[0].url);
+  //console.log(tabs[0].url);
 }
 
 function onError(error) {
@@ -113,14 +133,14 @@ chrome.runtime.onMessage.addListener(({ name, data }) => {
 
 chrome.tabs.onActivated.addListener((actTabInfo) => {
   chrome.tabs.get(actTabInfo.tabId, (tab) => {
-	  chrome.windows.getCurrent({} ,function(Window) {console.log(actTabInfo.windowId ,"==", Window.id);
+	  chrome.windows.getCurrent({} ,function(Window) {//console.log("onActivated");
 		if (actTabInfo.windowId == Window.id) getNote([tab]);
 	});
   });
 });
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (tab.active && (changeInfo.url || changeInfo.status)) {
-	  chrome.windows.getCurrent({} ,function(Window) { console.log(tab.windowId ,"==", Window.id);
+  if (tab.active && (changeInfo.url || changeInfo.status)) {//console.log("onUpdated");
+	  chrome.windows.getCurrent({} ,function(Window) { 
 		if (tab.windowId == Window.id) getNote([tab]);
 	});
   }
