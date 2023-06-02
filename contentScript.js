@@ -1,6 +1,20 @@
 	var callbacks = {};
 	callbacks["__TSN__"] = null;
 
+
+	function getMeta() {
+		var doc = document;
+		var metaTags = doc.getElementsByTagName("meta");
+	    var tw5 = false, description= "", mediaImage = "";
+		for(var t=0; t<metaTags.length; t++) {
+			if(metaTags[t].name === "description") description = metaTags[t].content;
+			else if ( metaTags[t].getAttribute('property')=="og:image") mediaImage = metaTags[t].content;
+			else if ( metaTags[t].getAttribute('property')=="og:description") description = metaTags[t].content;
+		}
+		return {description:description, mediaImage:mediaImage};
+	}
+	
+
 	var handler = null;
 	function injectMessageBox(doc) {
 		// Inject the message box
@@ -59,7 +73,7 @@
 	function getDetails (data, opts){
 						// Find the message box element
 		data.section='__sys__';
-		data.callback="__TSN__"
+		data.__callback__="__TSN__"
 		data.category='TSN';
 		if (opts) data.opts = opts;//console.log("---------------",data.url);
 		var messageBox = document.getElementById("tiddlyclip-message-box");
@@ -82,7 +96,7 @@
 		function putDetails (data, opts){
 						// Find the message box element
 		data.section='__sys__';
-		data.callback="__TSNput__"
+		data.__callback__="__TSNput__"
 		data.category='TSNput';
 		data.opts = opts;//console.log("---------------",data.url)
 		var messageBox = document.getElementById("tiddlyclip-message-box");
@@ -114,7 +128,9 @@
 					callbacks["__TSN__"]= function (x){
 						var resp = {};
 						console.log("gettid callback  "+x.txt);
-						resp.msg = x.txt;
+						resp.data = x.txt;
+						resp.aux = x.aux;
+						resp.extra = x.extra;
 						sendResponse(resp);
 						callbacks["__TSN__"] = null;
 					}
@@ -133,6 +149,9 @@
 					}
 					putDetails(request.data, request.opts);
 					return true;
+				}
+				if (request.action == 'getMeta') {
+					sendResponse(getMeta());
 				}
 		});
 		
