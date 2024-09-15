@@ -10,18 +10,15 @@ chrome.runtime.onInstalled.addListener(() => {
   setupContextMenu();
 });
 
+
 chrome.contextMenus.onClicked.addListener((data, tab) => {
 	console.log("url",tab.url);
+	chrome.tabs.sendMessage(tab.id, {action : 'getTid', data:{pageRef:tab.url},opts:"render"},function(res){
+		if (res) chrome.storage.session.set({'conected': tab.title, 'homeTab':tab.id}, function() {
+			console.log("connected var set");
 
-
-  chrome.storage.local.set({'conected': tab.url, 'homeTab':tab.id}, function() {
-	  console.log("connected var set");
-	  //chrome.runtime.sendMessage({
-    //name: 'doit'
-  //});  
-	  
+			});
 	  });
-  
 });
 
 chrome.sidePanel

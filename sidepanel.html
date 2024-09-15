@@ -1,59 +1,25 @@
 <html>
   <head>
-    <title>Tiddly Side Note</title>
-    <style>
-    textarea {
-  box-sizing: border-box;
-  width:100%;
-
-}
-
-.reset-button {
-  background-color: transparent;
-  border-width: 0;
-  font-family: inherit;
-  font-size: inherit;
-  font-style: inherit;
-  font-weight: inherit;
-  line-height: inherit;
-    cursor: pointer;
-  padding: 0;
-}
-
-.tagpill {
-  background-color: yellow;
-  border: none;
-  color: black;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  margin: 4px 2px;
-  cursor: pointer;
-  border-radius: 16px;
-}
-
-
-.tagpillfalse {
-  background-color: yellow;
-  border: none;
-  color: black;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  margin: 4px 2px;
-  border-radius: 16px;
-}
-
-</style>
+    <title>Tiddly Side Notes</title>
+	<link rel="stylesheet" href="sidepanel.css">
+	<base target="_blank" rel="noopener noreferrer">
   </head>
   <body>
-    home wiki- <p id="home">not connected</p>
-   <div> <img id="icon" src=""/><button id="get" style="background:red;width:25%;">edit</button> <button id="put" style="background:lightgreen;width:25%;">save</button> <button id="cancel" style="background:orange;width:25%;">cancel</button></div>
-   <div id="tags"></div><div id="dropdown"></div>
-	<textarea  data-autoresize id="edit" name="edit" rows="2" style="display:none;" >
-</textarea>
-
+    <h3 id="home">not connected</h3>
+   <div id="contents" style="display:none;" > <div> 
+   <button class="basicbutton" id="get"       style="background:red;;display:none;"       >SideNote</button>
+   <button class="basicbutton" id="jot"       style="background:cyan;display:none"       >jot</button>
+   <button class="basicbutton" id="hidejot"   style="background:violet;display:none;"    >hidejot</button>
+   <button class="basicbutton" id="jotcancel" style="background:orange;display:none;"    >jotclear</button>
+   <button class="basicbutton" id="jotsave"   style="background:lightgreen;display:none;">jotsave</button>
+   <button class="basicbutton" id="put"       style="background:lightgreen;display:none;">save</button>
+   <button class="basicbutton" id="cancel"    style="background:orange;display:none;"    >cancel</button></div>
+   <textarea  id="makejot" name="makejot" rows="10" style="display:none;" ></textarea>
+   	<textarea  data-autoresize id="edit" name="edit" rows="2" style="display:none;" ></textarea>
+   <div id="tagss"></div><div id="dropdown"><span class="dropdown-item">add tags &#9660;</span>
+        <ul class="dropdown-menu" id="main-dropdown">
+        </ul></div>
 	 <div id="content">no conntent</div>
     <script src="sidepanel.js"></script>
-  </body>
+  </div></body>
 </html>

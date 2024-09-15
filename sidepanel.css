@@ -1,0 +1,93 @@
+       /* Add your custom styles here */
+        .dropdown {
+            display: block;
+            position: relative;
+        }
+
+        .dropdown-menu {
+
+            display: none;
+            top: 100%;
+            left: 0;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 0;
+            list-style: none;
+                        max-width: 100px;
+            margin: 0;
+        }
+
+
+
+        .dropdown-menu li {
+            cursor: pointer;
+            padding: 5px 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .dropdown-menu ul {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 100%;
+            min-width: 150px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 0;
+            list-style: none;
+            margin: 0;
+        }
+
+        .dropdown-menu li:hover ul {
+            display: block;
+        }
+		.dropdown-item {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+        
+textarea {
+  box-sizing: border-box;
+  width:100%;
+
+}
+
+.basicbutton {width: 100px;}
+
+.reset-button {
+  background-color: transparent;
+  border-width: 0;
+  font-family: inherit;
+  font-size: inherit;
+  font-style: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+    cursor: pointer;
+  padding: 0;
+}
+
+.tagpill {
+  background-color: yellow;
+  border: none;
+  color: black;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 16px;
+}
+
+
+.tagpillfalse {
+  background-color: yellow;
+  border: none;
+  color: black;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  border-radius: 16px;
+}
+
+
